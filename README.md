@@ -8,8 +8,11 @@
 
 方式一：直接从 [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=3815412863) 订阅。
 
-方式二：从 [Releases](../../releases) 下载 `Q弹尖塔.dll`、`Q弹尖塔.json`、`Q弹尖塔.pck` 三个文件，
-放进 `<游戏目录>/mods/Q弹尖塔/`。
+方式二：从 [Releases](../../releases) 下载 `QJellyTower-v1.0.0.zip`，解压得到
+`Q弹尖塔.dll`、`Q弹尖塔.json`、`Q弹尖塔.pck` 三个文件，放进 `<游戏目录>/mods/Q弹尖塔/`。
+
+> 打包成 zip 是因为 GitHub 的 Release 附件名只接受 ASCII 字符，
+> 中文名会被服务端过滤掉（`Q弹尖塔.dll` 变成 `Q.dll`），交给 zip 就没有这个问题。
 
 ## 功能
 
