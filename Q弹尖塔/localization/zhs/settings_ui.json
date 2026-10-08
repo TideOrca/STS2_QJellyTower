@@ -1,0 +1,16 @@
+{
+  "QJELLYTOWER.mod_title": "Q弹尖塔",
+  "QJELLYTOWER-JELLY_SECTION.title": "Q弹设置",
+  "QJELLYTOWER-JELLY_ENABLED.title": "弹动默认开启",
+  "QJELLYTOWER-CYCLE_SECONDS.title": "弹动周期",
+  "QJELLYTOWER-AMPLITUDE.title": "弹动幅度",
+  "QJELLYTOWER-MUSIC_VOLUME.title": "音乐音量",
+  "QJELLYTOWER-JELLY_FLIP.title": "角色左右翻转",
+  "QJELLYTOWER-TARGETS_SECTION.title": "弹动对象",
+  "QJELLYTOWER-JELLY_PLAYERS.title": "我方角色",
+  "QJELLYTOWER-JELLY_ENEMIES.title": "敌方角色",
+  "QJELLYTOWER-JELLY_CARDS.title": "卡牌",
+  "QJELLYTOWER-JELLY_POTIONS.title": "药水",
+  "QJELLYTOWER-HOVER.title": "跳舞（Q）",
+  "QJELLYTOWER-HOVER.description": "播放朋友的酒DJ"
+}

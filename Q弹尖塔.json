@@ -1,0 +1,17 @@
+{
+  "id": "Q弹尖塔",
+  "name": "Q弹尖塔",
+  "author": "TideOrca潮汐小虎鲸",
+  "description": "保持Q弹",
+  "version": "v1.0.0",
+  "min_game_version": "0.111.0",
+  "has_pck": true,
+  "has_dll": true,
+  "dependencies": [
+    {
+      "id": "BaseLib",
+      "min_version": "v3.4.7"
+    }
+  ],
+  "affects_gameplay": false
+}

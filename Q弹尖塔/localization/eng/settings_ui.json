@@ -1,0 +1,16 @@
+{
+  "QJELLYTOWER.mod_title": "Q Jelly Tower",
+  "QJELLYTOWER-JELLY_SECTION.title": "Jelly Settings",
+  "QJELLYTOWER-JELLY_ENABLED.title": "Jelly on by default",
+  "QJELLYTOWER-CYCLE_SECONDS.title": "Jelly cycle",
+  "QJELLYTOWER-AMPLITUDE.title": "Jelly amplitude",
+  "QJELLYTOWER-MUSIC_VOLUME.title": "Music volume",
+  "QJELLYTOWER-JELLY_FLIP.title": "Flip characters horizontally",
+  "QJELLYTOWER-TARGETS_SECTION.title": "Jelly targets",
+  "QJELLYTOWER-JELLY_PLAYERS.title": "Player characters",
+  "QJELLYTOWER-JELLY_ENEMIES.title": "Enemies",
+  "QJELLYTOWER-JELLY_CARDS.title": "Cards",
+  "QJELLYTOWER-JELLY_POTIONS.title": "Potions",
+  "QJELLYTOWER-HOVER.title": "Dance (Q)",
+  "QJELLYTOWER-HOVER.description": "Play Friends' Wine DJ"
+}
