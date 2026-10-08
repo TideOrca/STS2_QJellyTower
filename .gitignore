@@ -1,3 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# 构建产物 —— 发布走 GitHub Releases，不进仓库
+/build/
+/obj/
+/bin/
+
+# IDE 个人配置
+.idea/
+*.DotSettings.user
+*.user
