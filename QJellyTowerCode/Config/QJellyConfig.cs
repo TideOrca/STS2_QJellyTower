@@ -43,5 +43,11 @@ namespace QJellyTower.Config
         public static bool JellyCards { get; set; } = false;
 
         public static bool JellyPotions { get; set; } = false;
+
+        /// <summary>
+        /// 战斗外也生效：商店货架上的卡牌 / 药水 / 遗物会弹，音乐跨节点不中断。
+        /// 关掉后就只剩战斗内弹动，音乐也只在战斗中响。
+        /// </summary>
+        public static bool JellyOutsideCombat { get; set; } = true;
     }
 }

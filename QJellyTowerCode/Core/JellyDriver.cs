@@ -39,6 +39,9 @@ namespace QJellyTower.Core
         private static int _lastCreatures = -1;
         private static int _lastCards = -1;
         private static int _lastPotions = -1;
+        private static int _lastShopChar = -1;
+        private static int _lastShopNpc = -1;
+        private static int _lastShopSlots = -1;
 
         /// <summary>幂等地把驱动接到 SceneTree 上。由 NTopBar 的补丁在进入游戏界面时调用。</summary>
         public static void EnsureInstalled()
@@ -101,10 +104,18 @@ namespace QJellyTower.Core
             }
 
             bool inCombat = NCombatRoom.Instance != null;
-            bool active = QJellyTowerMain.JellyActive && (inCombat || _cardScreenActive);
+            bool outsideCombat = QJellyConfig.JellyOutsideCombat;
+            bool inMerchant = outsideCombat && NMerchantRoom.Instance != null;
 
-            // 音乐与弹动同进同出，避免在其他房间一直响
-            JellyMusic.Tick(active, QJellyConfig.MusicVolume);
+            // 弹动范围：战斗内、选卡界面，以及（战斗外生效开着时的）商人节点
+            bool active = QJellyTowerMain.JellyActive
+                && (inCombat || _cardScreenActive || inMerchant);
+
+            // 音乐：战斗外生效开着时整局游戏都不中断，关掉后只在战斗中响
+            bool musicOn = QJellyTowerMain.JellyActive
+                && (inCombat || (outsideCombat && NRun.Instance != null));
+
+            JellyMusic.Tick(musicOn, QJellyConfig.MusicVolume);
 
             if (!active)
             {
@@ -240,15 +251,24 @@ namespace QJellyTower.Core
             int creatures = CollectCreatures();
             int cards = CollectHandCards() + CollectGridCards();
             int potions = CollectPotions();
+            int shopChar = CollectMerchantCharacters();
+            int shopNpc = CollectMerchantNpc();
+            int shopSlots = CollectMerchantSlots();
 
-            if (creatures != _lastCreatures || cards != _lastCards || potions != _lastPotions)
+            if (creatures != _lastCreatures || cards != _lastCards || potions != _lastPotions
+                || shopChar != _lastShopChar || shopNpc != _lastShopNpc || shopSlots != _lastShopSlots)
             {
                 _lastCreatures = creatures;
                 _lastCards = cards;
                 _lastPotions = potions;
+                _lastShopChar = shopChar;
+                _lastShopNpc = shopNpc;
+                _lastShopSlots = shopSlots;
 
                 Log.Info("[Q弹尖塔] jelly targets: creatures=" + creatures
-                    + " cards=" + cards + " potions=" + potions, 2);
+                    + " cards=" + cards + " potions=" + potions
+                    + " shopChar=" + shopChar + " shopNpc=" + shopNpc
+                    + " shopSlots=" + shopSlots, 2);
             }
         }
 
@@ -398,6 +418,110 @@ namespace QJellyTower.Core
                 }
 
                 Active.Add(Cached(holder, () => new JellyTarget(holder)));
+                count++;
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// 商店里站着的角色立绘。它其实是「玩家角色」的商人造型
+        /// （NMerchantRoom 从 _players[n].Character.MerchantAnimPath 加载），
+        /// 不是商人本体，所以归在「我方角色」开关下。
+        /// </summary>
+        private static int CollectMerchantCharacters()
+        {
+            if (!QJellyConfig.JellyOutsideCombat || !QJellyConfig.JellyPlayers)
+            {
+                return 0;
+            }
+
+            NMerchantRoom room = NMerchantRoom.Instance;
+            if (room == null || !GodotObject.IsInstanceValid(room))
+            {
+                return 0;
+            }
+
+            Control container = room.GetNodeOrNull<Control>("%CharacterContainer");
+            if (container == null)
+            {
+                return 0;
+            }
+
+            int count = 0;
+            foreach (Node child in container.GetChildren())
+            {
+                if (child is not NMerchantCharacter character || !GodotObject.IsInstanceValid(character))
+                {
+                    continue;
+                }
+
+                Active.Add(Cached(character, () => new JellyTarget(character)));
+                count++;
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// 商人本体。他的视觉是 %MerchantVisual（斯宾骨骼），但挂在一个 Control 节点
+        /// （MerchantButton）下面，所以缩放按钮节点能带着骨骼一起动——
+        /// 和商品走的是同一条生效路径，不需要碰骨架。
+        /// </summary>
+        private static int CollectMerchantNpc()
+        {
+            if (!QJellyConfig.JellyOutsideCombat || !QJellyConfig.JellyPlayers)
+            {
+                return 0;
+            }
+
+            NMerchantRoom room = NMerchantRoom.Instance;
+            if (room == null || !GodotObject.IsInstanceValid(room))
+            {
+                return 0;
+            }
+
+            NMerchantButton button = room.MerchantButton;
+            if (button == null || !GodotObject.IsInstanceValid(button))
+            {
+                return 0;
+            }
+
+            Active.Add(Cached(button, () => new JellyTarget(button)));
+            return 1;
+        }
+
+        /// <summary>
+        /// 货架上出售的卡牌 / 药水 / 遗物 / 删牌服务。受「战斗外生效」+「卡牌」两个开关共同控制。
+        /// </summary>
+        private static int CollectMerchantSlots()
+        {
+            if (!QJellyConfig.JellyOutsideCombat || !QJellyConfig.JellyCards)
+            {
+                return 0;
+            }
+
+            NMerchantRoom room = NMerchantRoom.Instance;
+            if (room == null || !GodotObject.IsInstanceValid(room))
+            {
+                return 0;
+            }
+
+            NMerchantInventory inventory = room.Inventory;
+            if (inventory == null || !GodotObject.IsInstanceValid(inventory))
+            {
+                return 0;
+            }
+
+            int count = 0;
+            foreach (NMerchantSlot slot in inventory.GetAllSlots())
+            {
+                if (!GodotObject.IsInstanceValid(slot))
+                {
+                    continue;
+                }
+
+                Active.Add(Cached(slot, () => new JellyTarget(slot)));
                 count++;
             }
 

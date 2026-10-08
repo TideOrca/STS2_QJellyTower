@@ -17,6 +17,7 @@ global using MegaCrit.Sts2.Core.Nodes.Rooms;
 global using MegaCrit.Sts2.Core.Nodes.CommonUi;
 global using MegaCrit.Sts2.Core.Nodes.Potions;
 global using MegaCrit.Sts2.Core.Nodes.Relics;
+global using MegaCrit.Sts2.Core.Nodes.Screens.Shops;
 global using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
 global using MegaCrit.Sts2.Core.HoverTips;
 global using MegaCrit.Sts2.Core.Nodes.HoverTips;
